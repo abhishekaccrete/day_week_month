@@ -321,7 +321,7 @@ UIParams.paramForHeaderView = function(config)
 		left: '10%',
 		top: 0,
 		width: Ti.UI.FILL,
-		height: '10%',
+		height: Ti.UI.SIZE,
 		layout: 'horizontal'
 	};
 };

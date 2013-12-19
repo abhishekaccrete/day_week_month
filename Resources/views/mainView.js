@@ -41,12 +41,13 @@ mainView.getWeekView = function(config)
 			if(day == todayInfo['dayIndex'])
 				var view = Titanium.UI.createView({
 				  backgroundColor:'blue',
-				  left: 5, top: 5, width: '13%', height: 50
+				  left: 5, top: 5, width: '13%', height: 50, borderRadius: '5px', 
+				  borderColor: 'black'
 				});
 			else
 				var view = Titanium.UI.createView({
-				  backgroundColor:'red',
-				  left: 5, top: 5, width: '13%', height: 50
+				  left: 5, top: 5, width: '13%', height: 50, borderRadius: '5px', 
+				  borderColor: 'black'
 				});
 			rowView.add(view);
 		}
