@@ -84,6 +84,18 @@ mainView.getNavView = function(config)
 		}
 		mainView.currentDateInfo = previousWeekStartDate;
 	});
+	btnToday.addEventListener('click',function(e)
+	{
+		var currentWeekStartDate = new Date();
+		currentWeekStartDate.setMonth(currentWeekStartDate.getMonth(), currentWeekStartDate.getDate()-currentWeekStartDate.getDay());
+		for(var iCount = 0; iCount < 7; iCount ++)
+		{
+			var day = new Date();
+			day.setMonth(currentWeekStartDate.getMonth(),currentWeekStartDate.getDate()+iCount);
+			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
+		}
+		mainView.currentDateInfo = currentWeekStartDate;
+	});
 	return navView;
 };
 
