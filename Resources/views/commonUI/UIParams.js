@@ -322,14 +322,17 @@ UIParams.paramForHeaderView = function(config)
 		top: 0,
 		width: Ti.UI.FILL,
 		height: Ti.UI.SIZE,
-		layout: 'horizontal'
+		layout: 'horizontal',
+		borderRadius: '5px',
+		borderColor: 'black',
+		backgroundColor: 'gray'
 	};
 };
 
 UIParams.paramForDayLabelHeader = function(config)
 {
 	return {
-		left: 5,
+		left: 10,
 		top:5,
 		width: '13%', 
 		height: Ti.UI.SIZE,

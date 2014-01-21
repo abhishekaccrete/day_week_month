@@ -131,10 +131,20 @@ model.getTodayDay = function(config)
 	var today = new Date();
 	return {
 		date: today.getDate(),
-		day: config.week[today.getDay()-1],
-		dayIndex: today.getDay()-1
+		day: config.week[today.getDay()],
+		dayIndex: today.getDay(),
+		dateObj: today,
+		monthIndex: today.getMonth()
 	};
-	//config.week[today.getDay()];
+};
+
+model.getFirstDayInfo = function(config, dateObj)
+{
+	return {
+		date: dateObj.getDate(),
+		day: config.week[dateObj.getDay()],
+		dayIndex: dateObj.getDay()
+	};
 };
 
 model.getTableViewRows = function(config)
