@@ -1,9 +1,13 @@
 mainView = {};
+
+//this rules the week's start date, initialized to current week's start date
 mainView.currentDateInfo = new Date();
+
 mainView.open = function(config)
 {
 	var tbGroup = UIComp.tabGroup();
 	var winWeek = UIComp.window({title: 'Week', backgroundColor: 'white'});
+	//set the current date
 	var today = new Date();
 	mainView.currentDateInfo.date = today;
 	var parentView = mainView.getView(config);
@@ -17,17 +21,22 @@ mainView.getView = function(config)
 {
 	var parentView = UIComp.view({left: 0, top: 0, width: Ti.UI.FILL, height: Ti.UI.FILL, layout: 'vertical'});
 	var topView = UIComp.view({left: 0, top: 0, width: Ti.UI.FILL, height: '10%', backgroundColor: 'gray'});
+	//get the navigable view
 	var navView = mainView.getNavView(config);
 	topView.add(navView);
+	//view for table view
 	var calendarView = UIComp.view({left: 0, top: 0, width: Ti.UI.FILL, height: Ti.UI.FILL, backgroundColor: 'silver'});
+	//get current week's dates
 	var dateInfo = mainView.getCurrentWeekDates(config);
 	var dayIndexView = mainView.getHeaderViewBasedOnWeek(config, dateInfo);
 	var tblViewData = [];
-	for(var iRowCount = 0; iRowCount < 1; iRowCount++)
+	for(var iRowCount = 0; iRowCount < 10; iRowCount++)
 	{
 		var tblViewRow = UIComp.tableViewRow({height: 50});
 		var rowView = UIComp.view({left: 0, top: 0, width: Ti.UI.FILL, height: 50, 
 			layout: 'horizontal', backgroundColor: 'gray'});
+		var lblArea = UIComp.label({left: 5, width: 150, height: Ti.UI.SIZE, text: 'Area id:'+iRowCount});
+		rowView.add(lblArea);
 		tblViewRow.add(rowView);
 		for(days in config.week)
 		{
@@ -37,7 +46,7 @@ mainView.getView = function(config)
 		}
 		tblViewData.push(tblViewRow);
 	}
-	var tblView = UIComp.tableView({left: '10%', backgroundColor: 'white', data: tblViewData, style: Ti.UI.iPhone.TableViewStyle.GROUPED,
+	var tblView = UIComp.tableView({left: 0, backgroundColor: 'white', data: tblViewData, style: Ti.UI.iPhone.TableViewStyle.GROUPED,
 	headerView: dayIndexView});
 	calendarView.add(tblView);
 	parentView.add(topView);
@@ -101,10 +110,11 @@ mainView.getNavView = function(config)
 
 mainView.getHeaderViewBasedOnWeek = function(config, dateInfo)
 {
-	var dayIndexView = UIComp.view({left: 0, top: 0, width: Ti.UI.SIZE, height: Ti.UI.SIZE, layout: 'horizontal'});
+	var dayIndexView = UIComp.view({left: 0, top: 0, width: Ti.UI.SIZE, height: Ti.UI.SIZE, layout: 'horizontal', 
+	backgroundColor: 'brown'});
 	for(day in config.week)
 	{
-		var lblDay = UIComp.label({left: 10, top: 0, width: '13%', height: Ti.UI.SIZE, text: dateInfo[day]+' '+config.week[day]});
+		var lblDay = UIComp.label({left: 0, top: 0, width: '13%', height: Ti.UI.SIZE, text: dateInfo[day]+' '+config.week[day]});
 		dayIndexView.add(lblDay);
 	}
 	return dayIndexView;
