@@ -245,7 +245,7 @@ model.inspection_existence = function(config, weekStartDate, days, areaInfo)
 	var	inspection_result = {
 		left: 5, top: 5, width: '11%', height: '85%', 
 		borderWidth: '2px', borderRadius: '5px', borderColor: 'black',
-		area: areaInfo,date: new Date(mainView.currentDateInfo.getMonth(),mainView.currentDateInfo.getDate()+parseInt(days)),
+		area: areaInfo,date: new Date().setMonth(mainView.currentDateInfo.getMonth(),mainView.currentDateInfo.getDate()+parseInt(days)),
 		data: []
 	};
 	//there will exist one inspection for an area and a day.
