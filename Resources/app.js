@@ -7,6 +7,7 @@ config =
 	resPath: Ti.Filesystem.resourcesDirectory,
 	viewPath: Ti.Filesystem.resourcesDirectory+'views/',
 	modelPath: Ti.Filesystem.resourcesDirectory+'model/',
+	dbPath: Ti.Filesystem.resourcesDirectory+'Inspections.db',
 	cloud: require('ti.cloud'),
 	week:{
 		0: 'Sunday',
@@ -17,6 +18,22 @@ config =
 		5: 'Friday',
 		6: 'Saturday'
 	},
+	month: {
+		0: '01',
+		1: '02',
+		2: '03',
+		3: '04',
+		4: '05',
+		5: '06',
+		6: '07',
+		7: '08',
+		8: '09',
+		9: '10',
+		10: '11',
+		11: '12',
+	}
+	,
+	
 	year: {
 		0: 31,
 		1: 28,
@@ -37,8 +54,11 @@ try
 {
 	Ti.include(config.viewPath+'commonUI/UIParams.js');
 	Ti.include(config.viewPath+'commonUI/UIComp.js');
+	Ti.include(config.modelPath+'dblayer.js');
 	Ti.include(config.modelPath+'model.js');
 	Ti.include(config.viewPath+'mainView.js');
+	
+	config.db = Ti.Database.install(config.dbPath,'Inspections_app');
 	mainView.open(config);
 }
 catch(e)

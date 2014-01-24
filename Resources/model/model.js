@@ -151,3 +151,124 @@ model.getTableViewRows = function(config)
 {
 	
 };
+
+model.getAreas = function(config)
+{
+	var areas = dblayer.getAreas(config);
+	var totalFields = model.getFieldCount(areas);
+	var areasArray = [];
+	for(var iRowCount = 0; iRowCount < areas.rowCount; iRowCount++)
+	{
+		var areaRow = [];
+		for(var iFieldCount = 0; iFieldCount < totalFields; iFieldCount++)
+		{
+			areaRow[areas.fieldName(iFieldCount)] = areas.field(iFieldCount);
+		}
+		areasArray.push(areaRow);
+		areas.next();
+	}
+	return areasArray;
+};
+
+model.getFormattedDate = function(config, date)
+{
+	var sYear = date.getFullYear();
+	var sMonth = config.month[date.getMonth()];
+	var sDate = date.getDate();
+	return sYear+sMonth+sDate;
+};
+
+model.parseInspectionsForWeek = function(config)
+{
+	var tblViewData = [];
+	//get the areas
+	var areas = model.getAreas(config);
+	for(var iRowCount = 0; iRowCount < areas.length; iRowCount++)
+	{
+		var tblViewRow = UIComp.tableViewRow({height: 50});
+		var rowView = UIComp.view({left: 0, top: 0, width: Ti.UI.FILL, height: 50, 
+			layout: 'horizontal', backgroundColor: 'gray'});
+		var lblArea = UIComp.label({left: 5, width: 150, height: Ti.UI.SIZE, text: areas[iRowCount]['Area']});
+		rowView.add(lblArea);
+		tblViewRow.add(rowView);
+		for(days in config.week)
+		{
+			var viewParams = model.inspection_existence(config, mainView.currentDateInfo, days, areas[iRowCount]);
+			var dayView = UIComp.view(viewParams);
+			dayView.addEventListener('click',function(e)
+			{
+				if(e.source.backgroundColor == 'blue')
+				{
+					var optionDialog = Ti.UI.createOptionDialog(
+					{
+						options: ['Process Inspection','Cancel']
+					});
+					optionDialog.addEventListener('click',function(e)
+					{
+						var winProcess = UIComp.window({title: 'Process', backgroundColor: 'white'});
+						winProcess.open();
+					});
+					optionDialog.show();
+				}
+				else
+				{
+					var alertDialog = Ti.UI.createAlertDialog({
+						title: 'test',
+						view: e.source,
+						buttonNames: ['Set', 'Cancel']
+					});
+					alertDialog.addEventListener('click',function(e)
+					{
+						if(e.index == 0)
+						{
+							e.source.view.setBackgroundColor('blue');
+						}
+					});
+					alertDialog.show();					
+				}
+			});
+			rowView.add(dayView);
+		}
+		tblViewData.push(tblViewRow);
+	}
+	return tblViewData;	
+};
+
+model.inspection_existence = function(config, weekStartDate, days, areaInfo)
+{
+	var dayViewParameters = [];
+	var date = new Date();
+	date.setMonth(weekStartDate.getMonth(), weekStartDate.getDate()+parseInt(days));
+	var day = (date.getDate()<10) ? '0'+date.getDate():date.getDate();
+	var dateFormatted = date.getFullYear()+ config.month[date.getMonth()]+day;
+	var inspection = dblayer.getInspectionForDay(config, dateFormatted, areaInfo['AreaID']);
+	var	inspection_result = {
+		left: 5, top: 5, width: '11%', height: '85%', 
+		borderWidth: '2px', borderRadius: '5px', borderColor: 'black',
+		area: areaInfo,date: new Date(mainView.currentDateInfo.getMonth(),mainView.currentDateInfo.getDate()+parseInt(days)),
+		data: []
+	};
+	//there will exist one inspection for an area and a day.
+	//inspection will have multiple records depending on the questions.
+	if(inspection.rowCount > 0)
+	{
+		inspection_result.backgroundColor = 'green'; 		
+		var totalField = model.getFieldCount(inspection);
+		while(inspection.isValidRow())
+		{
+			var inspection_row = [];
+			for(var iFieldCount = 0; iFieldCount < totalField; iFieldCount++)
+			{
+				inspection_row[inspection.fieldName(iFieldCount)] = inspection.field(iFieldCount);
+			}
+			inspection_result.data.push(inspection_row);
+			inspection.next();
+		}		
+		Ti.API.info(inspection_result);
+	}
+	else
+	{
+		inspection_result.backgroundColor = 'white';
+	}
+	return inspection_result;
+};

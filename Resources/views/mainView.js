@@ -29,26 +29,10 @@ mainView.getView = function(config)
 	//get current week's dates
 	var dateInfo = mainView.getCurrentWeekDates(config);
 	var dayIndexView = mainView.getHeaderViewBasedOnWeek(config, dateInfo);
-	var tblViewData = [];
-	for(var iRowCount = 0; iRowCount < 10; iRowCount++)
-	{
-		var tblViewRow = UIComp.tableViewRow({height: 50});
-		var rowView = UIComp.view({left: 0, top: 0, width: Ti.UI.FILL, height: 50, 
-			layout: 'horizontal', backgroundColor: 'gray'});
-		var lblArea = UIComp.label({left: 5, width: 150, height: Ti.UI.SIZE, text: 'Area id:'+iRowCount});
-		rowView.add(lblArea);
-		tblViewRow.add(rowView);
-		for(days in config.week)
-		{
-			var dayView = UIComp.view({left: 5, top: 0, width: '13%', height: Ti.UI.FILL, 
-				backgroundColor: 'blue', borderRadius: '5px', borderColor: 'black'});
-			rowView.add(dayView);
-		}
-		tblViewData.push(tblViewRow);
-	}
-	var tblView = UIComp.tableView({left: 0, backgroundColor: 'white', data: tblViewData, style: Ti.UI.iPhone.TableViewStyle.GROUPED,
+	var tblData = model.parseInspectionsForWeek(config);
+	tblViewInspections = UIComp.tableView({left: 0, backgroundColor: 'white', data: tblData, style: Ti.UI.iPhone.TableViewStyle.GROUPED,
 	headerView: dayIndexView});
-	calendarView.add(tblView);
+	calendarView.add(tblViewInspections);
 	parentView.add(topView);
 	parentView.add(calendarView);
 	return parentView;
@@ -80,6 +64,8 @@ mainView.getNavView = function(config)
 			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
 		}
 		mainView.currentDateInfo = nextWeekStartDate;
+		var tblData = model.parseInspectionsForWeek(config);
+		tblViewInspections.setData(tblData);
 	});
 	btnPrevious.addEventListener('click',function(e)
 	{
@@ -92,6 +78,8 @@ mainView.getNavView = function(config)
 			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
 		}
 		mainView.currentDateInfo = previousWeekStartDate;
+		var tblData = model.parseInspectionsForWeek(config);
+		tblViewInspections.setData(tblData);
 	});
 	btnToday.addEventListener('click',function(e)
 	{
@@ -104,6 +92,8 @@ mainView.getNavView = function(config)
 			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
 		}
 		mainView.currentDateInfo = currentWeekStartDate;
+		var tblData = model.parseInspectionsForWeek(config);
+		tblViewInspections.setData(tblData);
 	});
 	return navView;
 };
