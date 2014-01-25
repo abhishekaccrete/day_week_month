@@ -70,7 +70,8 @@ mainView.getNavView = function(config)
 	btnPrevious.addEventListener('click',function(e)
 	{
 		var previousWeekStartDate = new Date();
-		previousWeekStartDate.setMonth(mainView.currentDateInfo.getMonth(), mainView.currentDateInfo.getDate()-7);
+		var dayPrevious = mainView.currentDateInfo.getDate()-7;
+		previousWeekStartDate.setFullYear(mainView.currentDateInfo.getFullYear(), mainView.currentDateInfo.getMonth(), mainView.currentDateInfo.getDate()-7);
 		for(var iCount = 0; iCount < 7; iCount ++)
 		{
 			var day = new Date();

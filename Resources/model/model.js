@@ -238,7 +238,8 @@ model.inspection_existence = function(config, weekStartDate, days, areaInfo)
 {
 	var dayViewParameters = [];
 	var date = new Date();
-	date.setMonth(weekStartDate.getMonth(), weekStartDate.getDate()+parseInt(days));
+	date.setFullYear(weekStartDate.getFullYear(), weekStartDate.getMonth(), weekStartDate.getDate()+parseInt(days));
+	
 	var day = (date.getDate()<10) ? '0'+date.getDate():date.getDate();
 	var dateFormatted = date.getFullYear()+ config.month[date.getMonth()]+day;
 	var inspection = dblayer.getInspectionForDay(config, dateFormatted, areaInfo['AreaID']);
