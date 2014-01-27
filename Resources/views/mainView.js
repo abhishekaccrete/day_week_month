@@ -30,10 +30,10 @@ mainView.getView = function(config)
 	var dateInfo = mainView.getCurrentWeekDates(config);
 	var dayIndexView = mainView.getHeaderViewBasedOnWeek(config, dateInfo);
 	var tblData = model.parseInspectionsForWeek(config);
-	tblViewInspections = UIComp.tableView({left: 0, backgroundColor: 'white', data: tblData, style: Ti.UI.iPhone.TableViewStyle.GROUPED,
-	headerView: dayIndexView});
+	tblViewInspections = UIComp.tableView({left: 0, backgroundColor: 'white', data: tblData, style: Ti.UI.iPhone.TableViewStyle.GROUPED});
 	calendarView.add(tblViewInspections);
 	parentView.add(topView);
+	parentView.add(dayIndexView);
 	parentView.add(calendarView);
 	return parentView;
 };
@@ -53,20 +53,6 @@ mainView.getNavView = function(config)
 	navView.add(btnPrevious);
 	navView.add(btnToday);
 	navView.add(btnNext);
-	btnNext.addEventListener('click',function(e)
-	{
-		var nextWeekStartDate = new Date();
-		nextWeekStartDate.setMonth(mainView.currentDateInfo.getMonth(), mainView.currentDateInfo.getDate()+7);
-		for(var iCount = 0; iCount < 7; iCount ++)
-		{
-			var day = new Date();
-			day.setMonth(nextWeekStartDate.getMonth(),nextWeekStartDate.getDate()+iCount);
-			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
-		}
-		mainView.currentDateInfo = nextWeekStartDate;
-		var tblData = model.parseInspectionsForWeek(config);
-		tblViewInspections.setData(tblData);
-	});
 	btnPrevious.addEventListener('click',function(e)
 	{
 		var previousWeekStartDate = new Date();
@@ -76,7 +62,7 @@ mainView.getNavView = function(config)
 		{
 			var day = new Date();
 			day.setMonth(previousWeekStartDate.getMonth(),previousWeekStartDate.getDate()+iCount);
-			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
+			e.source.parent.parent.parent.children[1].children[iCount].setText(day.getDate()+' '+config.week[iCount]);
 		}
 		mainView.currentDateInfo = previousWeekStartDate;
 		var tblData = model.parseInspectionsForWeek(config);
@@ -90,9 +76,23 @@ mainView.getNavView = function(config)
 		{
 			var day = new Date();
 			day.setMonth(currentWeekStartDate.getMonth(),currentWeekStartDate.getDate()+iCount);
-			e.source.parent.parent.parent.children[1].children[0].headerView.children[iCount].setText(day.getDate()+' '+config.week[iCount]);
+			e.source.parent.parent.parent.children[1].children[iCount].setText(day.getDate()+' '+config.week[iCount]);
 		}
 		mainView.currentDateInfo = currentWeekStartDate;
+		var tblData = model.parseInspectionsForWeek(config);
+		tblViewInspections.setData(tblData);
+	});
+	btnNext.addEventListener('click',function(e)
+	{
+		var nextWeekStartDate = new Date();
+		nextWeekStartDate.setMonth(mainView.currentDateInfo.getMonth(), mainView.currentDateInfo.getDate()+7);
+		for(var iCount = 0; iCount < 7; iCount ++)
+		{
+			var day = new Date();
+			day.setMonth(nextWeekStartDate.getMonth(),nextWeekStartDate.getDate()+iCount);
+			e.source.parent.parent.parent.children[1].children[iCount].setText(day.getDate()+' '+config.week[iCount]);
+		}
+		mainView.currentDateInfo = nextWeekStartDate;
 		var tblData = model.parseInspectionsForWeek(config);
 		tblViewInspections.setData(tblData);
 	});
@@ -101,11 +101,12 @@ mainView.getNavView = function(config)
 
 mainView.getHeaderViewBasedOnWeek = function(config, dateInfo)
 {
-	var dayIndexView = UIComp.view({left: 0, top: 0, width: Ti.UI.SIZE, height: Ti.UI.SIZE, layout: 'horizontal', 
+	var dayIndexView = UIComp.view({left: 150, top: 0, width: Ti.UI.FILL, height: Ti.UI.SIZE, layout: 'horizontal', 
 	backgroundColor: 'brown'});
 	for(day in config.week)
 	{
-		var lblDay = UIComp.label({left: 0, top: 0, width: '13%', height: Ti.UI.SIZE, text: dateInfo[day]+' '+config.week[day]});
+		var lblDay = UIComp.label({left: 7, top: 0, width: '13%', height: Ti.UI.SIZE, text: dateInfo[day]+' '+config.week[day],
+		font: {fontSize: 10}});
 		dayIndexView.add(lblDay);
 	}
 	return dayIndexView;
